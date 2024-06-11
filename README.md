@@ -1,3 +1,5 @@
+NOTE: DONT COMMIT CHANGES DIRECTLY TO MAIN BRANCH! For easier debugging and merging of implementations
+
 To implement:
 1. Split full name to first name, middle name, last name
 2. Change year level to 1st year, 2nd year, 3rd year, 4th year, 5th year
