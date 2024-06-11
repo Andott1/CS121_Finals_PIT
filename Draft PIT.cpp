@@ -4,6 +4,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 using namespace std;
 
 // Base class Student
@@ -428,41 +429,62 @@ private:
     }
 
     void load_records() {
-    ifstream undergradFile(undergradFilename.c_str());
-    ifstream gradFile(gradFilename.c_str());
-
-    if (!undergradFile || !gradFile) {
-        cerr << "Could not open file for reading!" << endl;
-        return;
-    }
-
-    // Load undergraduate records
-    string name, id, course, mobile;
-    int yearLevel;
-    while (undergradFile >> name >> id >> course >> mobile >> yearLevel) {
-        Student* student = NULL;
-        switch (yearLevel) {
-            case 1: student = new FirstYear(name, id, course, mobile); break;
-            case 2: student = new SecondYear(name, id, course, mobile); break;
-            case 3: student = new ThirdYear(name, id, course, mobile); break;
-            case 4: student = new FourthYear(name, id, course, mobile); break;
-            case 5: student = new FifthYear(name, id, course, mobile); break;
-            default: cerr << "Invalid year level for undergraduate student" << endl;
-        }
-        if (student) {
-            students.push_back(student);
-        }
-    }
-
-    // Load graduate records
-    while (gradFile >> name >> id >> course >> mobile) {
-        Student* student = new Graduate(name, id, course, mobile);
-        students.push_back(student);
-    }
-
-    undergradFile.close();
-    gradFile.close();
-}
+	    ifstream undergradFile("undergraduates.txt");
+	    ifstream gradFile("graduates.txt");
+	
+	    if (!undergradFile || !gradFile) {
+	        cerr << "Error: Unable to open file(s) for reading." << endl;
+	        return;
+	    }
+	
+	    string line;
+	
+	    // Load undergraduate records
+	    while (getline(undergradFile, line)) {
+	        istringstream iss(line);
+	        string name, id, course, mobile, yearLevelStr;
+	
+	        // Split the line into fields using comma as the delimiter
+	        getline(iss, name, ',');
+	        getline(iss, id, ',');
+	        getline(iss, course, ',');
+	        getline(iss, mobile, ',');
+	        getline(iss, yearLevelStr, ',');
+	
+	        // Convert year level string to integer
+	        int yearLevel;
+	        stringstream(yearLevelStr) >> yearLevel;
+	
+	        // Add the student to the vector based on the year level
+	        switch (yearLevel) {
+	            case 1: students.push_back(new FirstYear(name, id, course, mobile)); break;
+	            case 2: students.push_back(new SecondYear(name, id, course, mobile)); break;
+	            case 3: students.push_back(new ThirdYear(name, id, course, mobile)); break;
+	            case 4: students.push_back(new FourthYear(name, id, course, mobile)); break;
+	            case 5: students.push_back(new FifthYear(name, id, course, mobile)); break;
+	            default:
+	                cerr << "Error: Invalid year level for undergraduate student: " << line << endl;
+	                break;
+	        }
+	    }
+	
+	    // Load graduate records
+	    while (getline(gradFile, line)) {
+		    istringstream iss(line);
+		    string name, id, course, mobile;
+		
+		    // Split the line into fields using comma as the delimiter
+		    getline(iss, name, ',');
+		    getline(iss, id, ',');
+		    getline(iss, course, ',');
+		    getline(iss, mobile, ',');
+		
+		    // Add the graduate student to the vector
+		    students.push_back(new Graduate(name, id, course, mobile));
+		}
+	    undergradFile.close();
+	    gradFile.close();
+	}
 
 
     void save_records() const {
@@ -474,20 +496,27 @@ private:
         return;
     }
 
+    // Save undergraduate records
     for (size_t i = 0; i < students.size(); ++i) {
-        const Student* student = students[i];
+    const Student* student = students[i];
         if (const FirstYear* fy = dynamic_cast<const FirstYear*>(student)) {
-            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 1" << endl;
+            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "1" << endl;
         } else if (const SecondYear* sy = dynamic_cast<const SecondYear*>(student)) {
-            undergradFile << sy->name << " " << sy->id << " " << sy->course << " " << sy->mobile << " 2" << endl;
+            undergradFile << sy->name << "," << sy->id << "," << sy->course << "," << sy->mobile << "," << "2" << endl;
         } else if (const ThirdYear* ty = dynamic_cast<const ThirdYear*>(student)) {
-            undergradFile << ty->name << " " << ty->id << " " << ty->course << " " << ty->mobile << " 3" << endl;
+            undergradFile << ty->name << "," << ty->id << "," << ty->course << "," << ty->mobile << "," << "3" << endl;
         } else if (const FourthYear* fy = dynamic_cast<const FourthYear*>(student)) {
-            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 4" << endl;
+            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "4" << endl;
         } else if (const FifthYear* fy = dynamic_cast<const FifthYear*>(student)) {
-            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 5" << endl;
-        } else if (dynamic_cast<const Graduate*>(student)) {
-            gradFile << student->name << " " << student->id << " " << student->course << " " << student->mobile << endl;
+            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "5" << endl;
+        }
+    }
+
+    // Save graduate records
+    for (size_t i = 0; i < students.size(); ++i) {
+    const Student* student = students[i];
+        if (dynamic_cast<const Graduate*>(student)) {
+            gradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile << endl;
         }
     }
 
