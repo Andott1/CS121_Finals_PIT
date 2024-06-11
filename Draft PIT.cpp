@@ -17,6 +17,7 @@ public:
     Student(string name = "", string id = "", string course = "", string mobile = "")
         : name(name), id(id), course(course), mobile(mobile) {}
 
+    virtual string getCategory() const = 0; // Pure virtual function
     virtual string getYearLevel() const = 0; // Pure virtual function
 
     friend ostream& operator<<(ostream& os, const Student& student) {
@@ -24,6 +25,7 @@ public:
         os << "- Student ID: " << student.id << endl;
         os << "- Course: " << student.course << endl;
         os << "- Mobile Number: " << student.mobile << endl;
+        os << "- Category: " << student.getCategory() << endl;
         os << "- Year Level: " << student.getYearLevel() << endl;
         return os;
     }
@@ -37,6 +39,10 @@ public:
     FirstYear(string name, string id, string course, string mobile)
         : Student(name, id, course, mobile) {}
 
+    string getCategory() const {
+        return "Undergraduate";
+    }
+
     string getYearLevel() const {
         return "1st Year";
     }
@@ -46,6 +52,10 @@ class SecondYear : public Student {
 public:
     SecondYear(string name, string id, string course, string mobile)
         : Student(name, id, course, mobile) {}
+
+    string getCategory() const {
+        return "Undergraduate";
+    }
 
     string getYearLevel() const {
         return "2nd Year";
@@ -57,6 +67,10 @@ public:
     ThirdYear(string name, string id, string course, string mobile)
         : Student(name, id, course, mobile) {}
 
+    string getCategory() const {
+        return "Undergraduate";
+    }
+
     string getYearLevel() const {
         return "3rd Year";
     }
@@ -66,6 +80,10 @@ class FourthYear : public Student {
 public:
     FourthYear(string name, string id, string course, string mobile)
         : Student(name, id, course, mobile) {}
+
+    string getCategory() const {
+        return "Undergraduate";
+    }
 
     string getYearLevel() const {
         return "4th Year";
@@ -77,8 +95,26 @@ public:
     FifthYear(string name, string id, string course, string mobile)
         : Student(name, id, course, mobile) {}
 
+    string getCategory() const {
+        return "Undergraduate";
+    }
+
     string getYearLevel() const {
         return "5th Year";
+    }
+};
+
+class Graduate : public Student {
+public:
+    Graduate(string name, string id, string course, string mobile)
+        : Student(name, id, course, mobile) {}
+
+    string getCategory() const {
+        return "Graduate";
+    }
+
+    string getYearLevel() const {
+        return "N/A"; // Graduates don't have a year level
     }
 };
 
@@ -87,7 +123,8 @@ private:
     vector<Student*> students;
     string adminU;
     string adminP;
-    const char* filename;
+    string undergradFilename; // Declare undergradFilename member variable
+    string gradFilename; // Declare gradFilename member variable
 
     void display_intro() const {
         cout << "-----------------------------------------------" << endl
@@ -118,58 +155,103 @@ private:
     }
 
     Student* create_student_record() {
-        string name, id, course, mobile;
-        int yearLevel;
-		
-		cout << "-----------------------------------------------" << endl << endl;
-        cout << "> Enter Student Name: ";
-        cin.ignore();
-        getline(cin, name);
+    string name, id, course, mobile;
+    int yearLevel;
+    int studentType;
 
-        cout << "> Enter Student ID: ";
-        getline(cin, id);
+    cout << "-----------------------------------------------" << endl << endl;
+    cout << "> Choose Student Type:" << endl;
+    cout << "  [1] Undergraduate" << endl;
+    cout << "  [2] Graduate" << endl;
+    cout << "> Enter Option: ";
+    cin >> studentType;
 
-        cout << "> Enter Student Course: ";
-        getline(cin, course);
+    cout << "> Enter Student Name: ";
+    cin.ignore();
+    getline(cin, name);
 
-        cout << "> Enter Student Mobile Number: ";
-        getline(cin, mobile);
+    cout << "> Enter Student ID: ";
+    getline(cin, id);
 
-        cout << "> Enter Year Level [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
-        cin >> yearLevel;
+    cout << "> Enter Student Course: ";
+    getline(cin, course);
 
-        switch (yearLevel) {
-            case 1: return new FirstYear(name, id, course, mobile);
-            case 2: return new SecondYear(name, id, course, mobile);
-            case 3: return new ThirdYear(name, id, course, mobile);
-            case 4: return new FourthYear(name, id, course, mobile);
-            case 5: return new FifthYear(name, id, course, mobile);
-            default: throw invalid_argument("Invalid year level");
+    cout << "> Enter Student Mobile Number: ";
+    getline(cin, mobile);
+
+    switch (studentType) {
+        case 1: {
+            cout << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
+            cout << "> Enter Year Level: ";
+            cin >> yearLevel;
+            switch (yearLevel) {
+                case 1: return new FirstYear(name, id, course, mobile);
+                case 2: return new SecondYear(name, id, course, mobile);
+                case 3: return new ThirdYear(name, id, course, mobile);
+                case 4: return new FourthYear(name, id, course, mobile);
+                case 5: return new FifthYear(name, id, course, mobile);
+                default: throw invalid_argument("Invalid year level");
+            }
         }
+        case 2: return new Graduate(name, id, course, mobile);
+        default: throw invalid_argument("Invalid student type");
     }
+}
 
     void input_record() {
         try {
             Student* student = create_student_record();
             students.push_back(student);
             cout << endl << "-------     [ Student Record Added ]     ------" << endl << endl;
+            save_records(); // Save records after adding
         } catch (const invalid_argument& e) {
             cerr << e.what() << endl;
         }
     }
 
-    void view_records() const {
-        cout << "-----------------------------------------------" << endl << endl;
-        if (!students.empty()) {
-            for (size_t i = 0; i < students.size(); ++i) {
-                cout << "- RECORD NUMBER [" << i + 1 << "]" << endl << endl;
-                cout << *students[i] << endl;
-            }
-            cout << "-----------------------------------------------" << endl << endl;
-        } else {
-            cout << endl << "----------    [ No Record Found ]    ----------" << endl << endl;
-        }
+	void view_all_records() const {
+    cout << "--------------------------------------------------" << endl;
+    cout << "[1] Undergraduate Student Records" << endl;
+    cout << "[2] Graduate Student Records" << endl;
+    cout << "--------------------------------------------------" << endl;
+    cout << "> Enter an option: ";
+    int option;
+    cin >> option;
+    cout << endl;
+
+    switch (option) {
+        case 1:
+            view_records("Undergraduate");
+            break;
+        case 2:
+            view_records("Graduate");
+            break;
+        default:
+            cout << "Invalid option!" << endl;
+            break;
     }
+}
+
+	void view_records(const string& category) const {
+	    cout << "--------------------------------------------------" << endl;
+	    cout << "------------     " << category << " Student Records     ------------" << endl;
+	    cout << "--------------------------------------------------" << endl;
+	
+	    bool found = false;
+	    for (size_t i = 0; i < students.size(); ++i) {
+	        if (students[i]->getCategory() == category) {
+	            cout << "- RECORD NUMBER [" << i + 1 << "]" << endl << endl;
+	            cout << *students[i] << endl;
+	            found = true;
+	        }
+	    }
+	
+	    if (!found) {
+	        cout << "No " << category << " records found." << endl;
+	    }
+	
+	    cout << "--------------------------------------------------" << endl;
+	}
 
     int find_record_recursive(const string& key, int index) {
         if (index >= students.size()) {
@@ -260,6 +342,7 @@ private:
         delete students[index];
         students.erase(students.begin() + index);
         cout << endl << "------     [ Student Record Deleted ]     -----" << endl << endl;
+        save_records(); // Save records after deletion
     }
 
     void update_record(int index) {
@@ -345,66 +428,76 @@ private:
     }
 
     void load_records() {
-        ifstream file(filename);
-        if (!file) {
-            cerr << "Could not open file for reading!" << endl;
-            return;
+    ifstream undergradFile(undergradFilename.c_str());
+    ifstream gradFile(gradFilename.c_str());
+
+    if (!undergradFile || !gradFile) {
+        cerr << "Could not open file for reading!" << endl;
+        return;
+    }
+
+    // Load undergraduate records
+    string name, id, course, mobile;
+    int yearLevel;
+    while (undergradFile >> name >> id >> course >> mobile >> yearLevel) {
+        Student* student = NULL;
+        switch (yearLevel) {
+            case 1: student = new FirstYear(name, id, course, mobile); break;
+            case 2: student = new SecondYear(name, id, course, mobile); break;
+            case 3: student = new ThirdYear(name, id, course, mobile); break;
+            case 4: student = new FourthYear(name, id, course, mobile); break;
+            case 5: student = new FifthYear(name, id, course, mobile); break;
+            default: cerr << "Invalid year level for undergraduate student" << endl;
         }
-
-        students.clear();
-        string name, id, course, mobile;
-        int yearLevel;
-
-        while (file >> yearLevel) {
-            file.ignore();
-            getline(file, name);
-            getline(file, id);
-            getline(file, course);
-            getline(file, mobile);
-
-            Student* student = NULL;
-            switch (yearLevel) {
-                case 1: student = new FirstYear(name, id, course, mobile); break;
-                case 2: student = new SecondYear(name, id, course, mobile); break;
-                case 3: student = new ThirdYear(name, id, course, mobile); break;
-                case 4: student = new FourthYear(name, id, course, mobile); break;
-                case 5: student = new FifthYear(name, id, course, mobile); break;
-                default: throw invalid_argument("Invalid year level in file");
-            }
+        if (student) {
             students.push_back(student);
         }
-
-        file.close();
     }
+
+    // Load graduate records
+    while (gradFile >> name >> id >> course >> mobile) {
+        Student* student = new Graduate(name, id, course, mobile);
+        students.push_back(student);
+    }
+
+    undergradFile.close();
+    gradFile.close();
+}
+
 
     void save_records() const {
-        ofstream file(filename);
-        if (!file) {
-            cerr << "Could not open file for writing!" << endl;
-            return;
-        }
+    ofstream undergradFile(undergradFilename.c_str());
+    ofstream gradFile(gradFilename.c_str());
 
-        for (size_t i = 0; i < students.size(); ++i) {
-            const Student* student = students[i];
-            int yearLevel = 0;
-            if (dynamic_cast<const FirstYear*>(student)) yearLevel = 1;
-            else if (dynamic_cast<const SecondYear*>(student)) yearLevel = 2;
-            else if (dynamic_cast<const ThirdYear*>(student)) yearLevel = 3;
-            else if (dynamic_cast<const FourthYear*>(student)) yearLevel = 4;
-            else if (dynamic_cast<const FifthYear*>(student)) yearLevel = 5;
-
-            file << yearLevel << endl
-                 << student->name << endl
-                 << student->id << endl
-                 << student->course << endl
-                 << student->mobile << endl;
-        }
-
-        file.close();
+    if (!undergradFile || !gradFile) {
+        cerr << "Could not open file for writing!" << endl;
+        return;
     }
 
+    for (size_t i = 0; i < students.size(); ++i) {
+        const Student* student = students[i];
+        if (const FirstYear* fy = dynamic_cast<const FirstYear*>(student)) {
+            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 1" << endl;
+        } else if (const SecondYear* sy = dynamic_cast<const SecondYear*>(student)) {
+            undergradFile << sy->name << " " << sy->id << " " << sy->course << " " << sy->mobile << " 2" << endl;
+        } else if (const ThirdYear* ty = dynamic_cast<const ThirdYear*>(student)) {
+            undergradFile << ty->name << " " << ty->id << " " << ty->course << " " << ty->mobile << " 3" << endl;
+        } else if (const FourthYear* fy = dynamic_cast<const FourthYear*>(student)) {
+            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 4" << endl;
+        } else if (const FifthYear* fy = dynamic_cast<const FifthYear*>(student)) {
+            undergradFile << fy->name << " " << fy->id << " " << fy->course << " " << fy->mobile << " 5" << endl;
+        } else if (dynamic_cast<const Graduate*>(student)) {
+            gradFile << student->name << " " << student->id << " " << student->course << " " << student->mobile << endl;
+        }
+    }
+
+    undergradFile.close();
+    gradFile.close();
+}
+
+
 public:
-    StudentMonitoringSystem() : adminU("admin"), adminP("12345"), filename("students.txt") {}
+    StudentMonitoringSystem() : adminU("admin"), adminP("12345"), undergradFilename("undergraduates.txt"), gradFilename("graduates.txt") {}
 
     void run() {
         display_intro();
@@ -430,7 +523,7 @@ public:
                     save_records();
                     break;
                 case 2:
-                    view_records();
+                    view_all_records();
                     prompt();
                     break;
                 case 3:
