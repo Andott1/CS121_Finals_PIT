@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <stdexcept>
+#include <algorithm>
 using namespace std;
 
 // Base class Student
@@ -158,11 +159,26 @@ private:
         }
     }
 
-    int find_record_recursive(const string& key, int index) const {
-        if (index >= students.size()) return -1;
-        if (students[index]->name == key || students[index]->id == key) return index;
-        return find_record_recursive(key, index + 1);
+    int find_record_recursive(const string& key, int index) {
+    if (index >= students.size()) {
+        return -1; // Not found
     }
+
+    // Check if key is a substring of student name or ID (case insensitive)
+    string name_lower = students[index]->name;
+    string id_lower = students[index]->id;
+    transform(name_lower.begin(), name_lower.end(), name_lower.begin(), ::tolower);
+    transform(id_lower.begin(), id_lower.end(), id_lower.begin(), ::tolower);
+
+    string key_lower = key;
+    transform(key_lower.begin(), key_lower.end(), key_lower.begin(), ::tolower);
+
+    if (name_lower.find(key_lower) != string::npos || id_lower.find(key_lower) != string::npos) {
+        return index; // Found
+    }
+
+    return find_record_recursive(key, index + 1); // Recur to the next index
+}
 
     void find_record() {
     string key;
@@ -170,33 +186,59 @@ private:
     cin.ignore();
     getline(cin, key);
 
-    int index = find_record_recursive(key, 0);
-    if (index != -1) {
-        cout << endl << "--------    ! Student Record Found !    -------" << endl << endl;
-        cout << *students[index] << endl;
+    vector<int> found_indices;
+    int index = 0;
+    while ((index = find_record_recursive(key, index)) != -1) {
+        found_indices.push_back(index);
+        index++; // Move to the next index after finding a match
+    }
 
-        // Prompt user to choose action
-        int choice;
-        while (true) {
-            cout << "Choose an action:" << endl;
-            cout << "1. Update record" << endl;
-            cout << "2. Delete record" << endl;
-            cout << "3. Done/Proceed" << endl;
-            cout << "> ";
-            cin >> choice;
+    if (!found_indices.empty()) {
+        cout << endl << "--------    ! Student Record(s) Found !    -------" << endl << endl;
+        for (size_t i = 0; i < found_indices.size(); ++i) {
+            int idx = found_indices[i];
+            cout << "- Record Number [" << idx + 1 << "]" << endl; // Display record number starting from 1
+            cout << *students[idx] << endl;
+        }
 
-            switch (choice) {
-                case 1:
-                    update_record(index);
-                    break;
-                case 2:
-                    delete_record(index);
-                    break;
-                case 3:
-                    return;
-                default:
-                    cout << "Invalid choice! Please try again." << endl;
+        int chosen_record_number;
+        cout << "Enter Record Number to Access: ";
+        cin >> chosen_record_number;
+
+        // Convert record number to index
+        int chosen_index = chosen_record_number - 1;
+
+        // Ensure the chosen index is valid
+        if (find(found_indices.begin(), found_indices.end(), chosen_index) != found_indices.end()) {
+            // Prompt user to choose action for the chosen record
+            int choice;
+            while (true) {
+                cout << "> Choose an action for the above record:" << endl;
+                cout << "[1] Update record" << endl;
+                cout << "[2] Delete record" << endl;
+                cout << "[3] Done/Proceed" << endl;
+                cout << "> ";
+                cin >> choice;
+
+                switch (choice) {
+                    case 1:
+                        update_record(chosen_index);
+                        save_records();
+                        break;
+                    case 2:
+                        delete_record(chosen_index);
+                        save_records();
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        cout << "Invalid choice! Please try again." << endl;
+                        continue;
+                }
+                break; // Exit while loop after a valid choice
             }
+        } else {
+            cout << "Invalid record number chosen!" << endl;
         }
     } else {
         cout << endl << "-----     ! Student Record Not Found !     ----" << endl << endl;
@@ -383,4 +425,3 @@ int main() {
     sms.run();
     return 0;
 }
-
