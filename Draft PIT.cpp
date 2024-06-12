@@ -234,9 +234,16 @@ private:
 }
 
 	void view_records(const string& category) const {
-	    cout << "--------------------------------------------------" << endl;
-	    cout << "------------     " << category << " Student Records     ------------" << endl;
-	    cout << "--------------------------------------------------" << endl;
+		if(category == "Undergraduate") {
+			cout << "--------------------------------------------------" << endl;
+	    	cout << "--------  Undergraduate Student Records  ---------" << endl;
+	    	cout << "--------------------------------------------------" << endl;
+		}
+		else {
+			cout << "--------------------------------------------------" << endl;
+	    	cout << "-----------  Graduate Student Records  -----------" << endl;
+	    	cout << "--------------------------------------------------" << endl;
+		}
 	
 	    bool found = false;
 	    for (size_t i = 0; i < students.size(); ++i) {
