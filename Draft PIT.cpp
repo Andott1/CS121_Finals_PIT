@@ -14,9 +14,12 @@ public:
     string id;
     string course;
     string mobile;
+    string dob; // Date of birth
+    string sex; // Sex
+    int age;    // Age
 
-    Student(string name = "", string id = "", string course = "", string mobile = "")
-        : name(name), id(id), course(course), mobile(mobile) {}
+    Student(string name = "", string id = "", string course = "", string mobile = "", string dob = "", string sex = "", int age = 0)
+        : name(name), id(id), course(course), mobile(mobile), dob(dob), sex(sex), age(age) {}
 
     virtual string getCategory() const = 0; // Pure virtual function
     virtual string getYearLevel() const = 0; // Pure virtual function
@@ -26,6 +29,9 @@ public:
         os << "- Student ID: " << student.id << endl;
         os << "- Course: " << student.course << endl;
         os << "- Mobile Number: " << student.mobile << endl;
+        os << "- Date of Birth: " << student.dob << endl;
+        os << "- Sex: " << student.sex << endl;
+        os << "- Age: " << student.age << endl;
         os << "- Category: " << student.getCategory() << endl;
         os << "- Year Level: " << student.getYearLevel() << endl;
         return os;
@@ -37,8 +43,8 @@ public:
 // Derived classes for each year level
 class FirstYear : public Student {
 public:
-    FirstYear(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    FirstYear(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Undergraduate";
@@ -51,8 +57,8 @@ public:
 
 class SecondYear : public Student {
 public:
-    SecondYear(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    SecondYear(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Undergraduate";
@@ -65,8 +71,8 @@ public:
 
 class ThirdYear : public Student {
 public:
-    ThirdYear(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    ThirdYear(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Undergraduate";
@@ -79,8 +85,8 @@ public:
 
 class FourthYear : public Student {
 public:
-    FourthYear(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    FourthYear(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Undergraduate";
@@ -93,8 +99,8 @@ public:
 
 class FifthYear : public Student {
 public:
-    FifthYear(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    FifthYear(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Undergraduate";
@@ -107,8 +113,8 @@ public:
 
 class Graduate : public Student {
 public:
-    Graduate(string name, string id, string course, string mobile)
-        : Student(name, id, course, mobile) {}
+    Graduate(string name, string id, string course, string mobile, string dob, string sex, int age)
+        : Student(name, id, course, mobile, dob, sex, age) {}
 
     string getCategory() const {
         return "Graduate";
@@ -156,8 +162,8 @@ private:
     }
 
     Student* create_student_record() {
-    string name, id, course, mobile;
-    int yearLevel;
+    string name, id, course, mobile, dob, sex;
+    int age, yearLevel;
     int studentType;
 
     cout << "-----------------------------------------------" << endl << endl;
@@ -180,21 +186,30 @@ private:
     cout << "> Enter Student Mobile Number: ";
     getline(cin, mobile);
 
+    cout << "> Enter Date of Birth (YYYY-MM-DD): ";
+    getline(cin, dob);
+
+    cout << "> Enter Sex (M/F): ";
+    getline(cin, sex);
+
+    cout << "> Enter Age: ";
+    cin >> age;
+
     switch (studentType) {
         case 1: {
             cout << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
             cout << "> Enter Year Level: ";
             cin >> yearLevel;
             switch (yearLevel) {
-                case 1: return new FirstYear(name, id, course, mobile);
-                case 2: return new SecondYear(name, id, course, mobile);
-                case 3: return new ThirdYear(name, id, course, mobile);
-                case 4: return new FourthYear(name, id, course, mobile);
-                case 5: return new FifthYear(name, id, course, mobile);
+                case 1: return new FirstYear(name, id, course, mobile, dob, sex, age);
+                case 2: return new SecondYear(name, id, course, mobile, dob, sex, age);
+                case 3: return new ThirdYear(name, id, course, mobile, dob, sex, age);
+                case 4: return new FourthYear(name, id, course, mobile, dob, sex, age);
+                case 5: return new FifthYear(name, id, course, mobile, dob, sex, age);
                 default: throw invalid_argument("Invalid year level");
             }
         }
-        case 2: return new Graduate(name, id, course, mobile);
+        case 2: return new Graduate(name, id, course, mobile, dob, sex, age);
         default: throw invalid_argument("Invalid student type");
     }
 }
@@ -360,11 +375,12 @@ private:
     while (true) {
         cout << endl << "-----------------------------------------------" << endl
              		 << "------  Name [1] | ID [2] | Course [3]  -------" << endl
-             		 << "--  Number [4] | Year Level [5] | Done [6]  ---" << endl << endl
+             		 << "--  Number [4] | Year Level [5] | DOB [6]  ---" << endl
+             		 << "--   Sex [7] | Age [8] | Done [9]  ---" << endl << endl
              		 << "> Choose Which Part to Update: ";
         cin >> record_part;
 
-        if (record_part == 6) {
+        if (record_part == 9) {
             cout << endl;
             return;
         }
@@ -402,11 +418,11 @@ private:
                 cin >> yearLevel;
                 Student* updatedStudent = NULL;
                 switch (yearLevel) {
-                    case 1: updatedStudent = new FirstYear(student->name, student->id, student->course, student->mobile); break;
-                    case 2: updatedStudent = new SecondYear(student->name, student->id, student->course, student->mobile); break;
-                    case 3: updatedStudent = new ThirdYear(student->name, student->id, student->course, student->mobile); break;
-                    case 4: updatedStudent = new FourthYear(student->name, student->id, student->course, student->mobile); break;
-                    case 5: updatedStudent = new FifthYear(student->name, student->id, student->course, student->mobile); break;
+                    case 1: updatedStudent = new FirstYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
+                    case 2: updatedStudent = new SecondYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
+                    case 3: updatedStudent = new ThirdYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
+                    case 4: updatedStudent = new FourthYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
+                    case 5: updatedStudent = new FifthYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
                     default: 
                         cout << "-------    [ Invalid Year Level ]     --------" << endl;
                         continue;
@@ -416,6 +432,23 @@ private:
                 cout << endl << "------     [ Year Level Updated ]     ------" << endl;
                 break;
             }
+            case 6:
+                cout << "> Enter New Date of Birth (YYYY-MM-DD): ";
+                cin.ignore();
+                getline(cin, student->dob);
+                cout << endl << "--     [ Date of Birth Updated ]     --" << endl;
+                break;
+            case 7:
+                cout << "> Enter New Sex (M/F): ";
+                cin.ignore();
+                getline(cin, student->sex);
+                cout << endl << "--     [ Sex Updated ]     --" << endl;
+                break;
+            case 8:
+                cout << "> Enter New Age: ";
+                cin >> student->age;
+                cout << endl << "--     [ Age Updated ]     --" << endl;
+                break;
             default:
                 cout << "-------    [ Invalid Part Number ]     --------" << endl;
                 break;
@@ -436,63 +469,74 @@ private:
     }
 
     void load_records() {
-	    ifstream undergradFile("undergraduates.txt");
-	    ifstream gradFile("graduates.txt");
+    ifstream undergradFile(undergradFilename.c_str());
+    ifstream gradFile(gradFilename.c_str());
+
+    if (!undergradFile || !gradFile) {
+        cerr << "Error: Unable to open file(s) for reading." << endl;
+        return;
+    }
+
+    string line;
+
+    // Load undergraduate records
+	while (getline(undergradFile, line)) {
+	    istringstream iss(line);
+	    string name, id, course, mobile, dob, sex, yearLevelStr, ageStr;
 	
-	    if (!undergradFile || !gradFile) {
-	        cerr << "Error: Unable to open file(s) for reading." << endl;
-	        return;
+	    // Split the line into fields using comma as the delimiter
+	    getline(iss, name, ',');
+	    getline(iss, id, ',');
+	    getline(iss, course, ',');
+	    getline(iss, mobile, ',');
+	    getline(iss, yearLevelStr, ',');
+	    getline(iss, dob, ',');
+	    getline(iss, sex, ',');
+	    getline(iss, ageStr, ',');
+	
+	    // Convert year level and age string to integers
+	    int yearLevel, age;
+	    stringstream(yearLevelStr) >> yearLevel;
+	    stringstream(ageStr) >> age;
+	
+	    // Add the student to the vector based on the year level
+	    switch (yearLevel) {
+	        case 1: students.push_back(new FirstYear(name, id, course, mobile, dob, sex, age)); break;
+	        case 2: students.push_back(new SecondYear(name, id, course, mobile, dob, sex, age)); break;
+	        case 3: students.push_back(new ThirdYear(name, id, course, mobile, dob, sex, age)); break;
+	        case 4: students.push_back(new FourthYear(name, id, course, mobile, dob, sex, age)); break;
+	        case 5: students.push_back(new FifthYear(name, id, course, mobile, dob, sex, age)); break;
+	        default:
+	            cerr << "Error: Invalid year level for undergraduate student: " << line << endl;
+	            break;
 	    }
-	
-	    string line;
-	
-	    // Load undergraduate records
-	    while (getline(undergradFile, line)) {
-	        istringstream iss(line);
-	        string name, id, course, mobile, yearLevelStr;
-	
-	        // Split the line into fields using comma as the delimiter
-	        getline(iss, name, ',');
-	        getline(iss, id, ',');
-	        getline(iss, course, ',');
-	        getline(iss, mobile, ',');
-	        getline(iss, yearLevelStr, ',');
-	
-	        // Convert year level string to integer
-	        int yearLevel;
-	        stringstream(yearLevelStr) >> yearLevel;
-	
-	        // Add the student to the vector based on the year level
-	        switch (yearLevel) {
-	            case 1: students.push_back(new FirstYear(name, id, course, mobile)); break;
-	            case 2: students.push_back(new SecondYear(name, id, course, mobile)); break;
-	            case 3: students.push_back(new ThirdYear(name, id, course, mobile)); break;
-	            case 4: students.push_back(new FourthYear(name, id, course, mobile)); break;
-	            case 5: students.push_back(new FifthYear(name, id, course, mobile)); break;
-	            default:
-	                cerr << "Error: Invalid year level for undergraduate student: " << line << endl;
-	                break;
-	        }
-	    }
-	
-	    // Load graduate records
-	    while (getline(gradFile, line)) {
-		    istringstream iss(line);
-		    string name, id, course, mobile;
-		
-		    // Split the line into fields using comma as the delimiter
-		    getline(iss, name, ',');
-		    getline(iss, id, ',');
-		    getline(iss, course, ',');
-		    getline(iss, mobile, ',');
-		
-		    // Add the graduate student to the vector
-		    students.push_back(new Graduate(name, id, course, mobile));
-		}
-	    undergradFile.close();
-	    gradFile.close();
 	}
 
+    // Load graduate records
+    while (getline(gradFile, line)) {
+        istringstream iss(line);
+        string name, id, course, mobile, dob, sex, ageStr;
+
+        // Split the line into fields using comma as the delimiter
+        getline(iss, name, ',');
+        getline(iss, id, ',');
+        getline(iss, course, ',');
+        getline(iss, mobile, ',');
+        getline(iss, dob, ',');
+        getline(iss, sex, ',');
+        getline(iss, ageStr, ',');
+
+        // Convert age string to integer
+        int age;
+        stringstream(ageStr) >> age;
+
+        // Add the graduate student to the vector
+        students.push_back(new Graduate(name, id, course, mobile, dob, sex, age));
+    }
+
+    undergradFile.close();
+    gradFile.close();
+}
 
     void save_records() const {
     ofstream undergradFile(undergradFilename.c_str());
@@ -505,25 +549,38 @@ private:
 
     // Save undergraduate records
     for (size_t i = 0; i < students.size(); ++i) {
-    const Student* student = students[i];
+        const Student* student = students[i];
+        // Check if the student is an undergraduate
         if (const FirstYear* fy = dynamic_cast<const FirstYear*>(student)) {
-            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "1" << endl;
+            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            undergradFile << "," << fy->getYearLevel(); // Append year level
+            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         } else if (const SecondYear* sy = dynamic_cast<const SecondYear*>(student)) {
-            undergradFile << sy->name << "," << sy->id << "," << sy->course << "," << sy->mobile << "," << "2" << endl;
+            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            undergradFile << "," << sy->getYearLevel(); // Append year level
+            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         } else if (const ThirdYear* ty = dynamic_cast<const ThirdYear*>(student)) {
-            undergradFile << ty->name << "," << ty->id << "," << ty->course << "," << ty->mobile << "," << "3" << endl;
+            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            undergradFile << "," << ty->getYearLevel(); // Append year level
+            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         } else if (const FourthYear* fy = dynamic_cast<const FourthYear*>(student)) {
-            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "4" << endl;
+            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            undergradFile << "," << fy->getYearLevel(); // Append year level
+            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         } else if (const FifthYear* fy = dynamic_cast<const FifthYear*>(student)) {
-            undergradFile << fy->name << "," << fy->id << "," << fy->course << "," << fy->mobile << "," << "5" << endl;
+            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            undergradFile << "," << fy->getYearLevel(); // Append year level
+            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         }
     }
 
     // Save graduate records
     for (size_t i = 0; i < students.size(); ++i) {
-    const Student* student = students[i];
+        const Student* student = students[i];
+        // Check if the student is a graduate
         if (dynamic_cast<const Graduate*>(student)) {
-            gradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile << endl;
+            gradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
+            gradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
         }
     }
 
