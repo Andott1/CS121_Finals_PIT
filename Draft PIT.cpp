@@ -135,8 +135,8 @@ private:
 
     void display_intro() const {
         cout << "-----------------------------------------------" << endl
-             << "------     STUDENT MONITORING SYSTEM     ------" << endl
-             << "----------     CS121 Midterm PIT     ----------" << endl
+             << "-----   [ STUDENT INFORMATION SYSTEM ]   ------" << endl
+             << "----------   [ CS121 FINALS PIT ]   -----------" << endl
              << "-----------------------------------------------" << endl << endl << endl;
     }
 
@@ -153,10 +153,10 @@ private:
             cin >> password;
 
             if ((username == adminU) && (password == adminP)) {
-                cout << endl << "------     [ Successfully Logged In ]     ------" << endl << endl;
+                cout << endl << "---        [ Successfully Logged In ]       ---" << endl << endl;
                 break;
             } else {
-                cout << endl << "--     [ Invalid Username and Password ]     --" << endl << endl;
+                cout << endl << "---    [ Invalid Username and Password ]    ---" << endl << endl;
             }
         }
     }
@@ -167,10 +167,10 @@ private:
     int studentType;
 
     cout << "-----------------------------------------------" << endl << endl;
-    cout << "> Choose Student Type:" << endl;
+    cout << "- Choose Student Type:" << endl;
     cout << "  [1] Undergraduate" << endl;
     cout << "  [2] Graduate" << endl;
-    cout << "> Enter Option: ";
+    cout << endl << "> Enter Option: ";
     cin >> studentType;
 
     cout << "> Enter Student Name: ";
@@ -589,49 +589,146 @@ private:
 }
 
 
+	void utilities_menu() {
+	    int option;
+	    cout << "----------------   [ UTILITIES MENU ]   ----------------" << endl
+	         << "--                                                    --" << endl
+	         << "--   [1] Check for Duplicate Records                  --" << endl
+	         << "--   [2] Return to Main Menu                           --" << endl
+	         << "--              	                                      --" << endl
+	         << "--------------------------------------------------------" << endl << endl;
+	    cout << "> Enter an option: ";
+	    cin >> option;
+	    cout << endl;
+	
+	    switch (option) {
+	        case 1:
+	            check_duplicate_records();
+	            break;
+	        case 2:
+	            break;
+	        default:
+	            cout << "----------     [ Invalid Option ]     ---------" << endl;
+	            break;
+	    }
+	}
+
+	void check_duplicate_records() {
+	    cout << "Checking for Duplicate Records..." << endl;
+	    bool foundDuplicates = false;
+	
+	    // Create a vector to store the indices of duplicate records
+	    vector<int> duplicateIndices;
+	
+	    // Iterate over the student records to check for duplicates
+	    for (size_t i = 0; i < students.size(); ++i) {
+	        for (size_t j = i + 1; j < students.size(); ++j) {
+	            // Compare the name and ID of each pair of student records
+	            if (students[i]->name == students[j]->name || students[i]->id == students[j]->id) {
+	                // If a duplicate is found, add the index of both records to the duplicateIndices vector
+	                duplicateIndices.push_back(i);
+	                duplicateIndices.push_back(j);
+	                foundDuplicates = true;
+	            }
+	        }
+	    }
+	
+	    // If duplicates are found, prompt the user to choose one and select an action
+	    if (foundDuplicates) {
+	        cout << "Duplicate records found!" << endl;
+	        for (size_t i = 0; i < duplicateIndices.size(); ++i) {
+	            int idx = duplicateIndices[i];
+	            cout << "Duplicate Record " << i + 1 << ":" << endl;
+	            cout << *students[idx] << endl;
+	        }
+	
+	        int chosenIndex;
+	        cout << "Enter the index of the record you want to choose: ";
+	        cin >> chosenIndex;
+	
+	        // Validate the chosen index
+	        if (chosenIndex >= 1 && chosenIndex <= duplicateIndices.size()) {
+	            int chosenRecordIndex = duplicateIndices[chosenIndex - 1];
+	
+	            int choice;
+	            cout << "Choose an action: " << endl;
+	            cout << "1. Update Record" << endl;
+	            cout << "2. Delete Record" << endl;
+	            cout << "3. Done/Proceed" << endl;
+	            cout << "Enter your choice: ";
+	            cin >> choice;
+	
+	            switch (choice) {
+	                case 1:
+	                    update_record(chosenRecordIndex);
+	                    save_records();
+	                    break;
+	                case 2:
+	                    delete_record(chosenRecordIndex);
+	                    save_records();
+	                    break;
+	                case 3:
+	                    // Proceed without performing any action
+	                    break;
+	                default:
+	                    cout << "Invalid choice! Please try again." << endl;
+	                    break;
+	            }
+	        } else {
+	            cout << "Invalid index chosen!" << endl;
+	        }
+	    } else {
+	        cout << "No duplicate records found." << endl;
+	    }
+	}
+
 public:
     StudentMonitoringSystem() : adminU("admin"), adminP("12345"), undergradFilename("undergraduates.txt"), gradFilename("graduates.txt") {}
 
     void run() {
-        display_intro();
-        login();
-        load_records();
-        int option = 0;
-        while (option != 4) {
-            cout << "--------------   [ MAIN MENU ]   --------------" << endl
-                 << "--                                           --" << endl
-                 << "--      [1] Add Student Record               --" << endl
-                 << "--      [2] View All Student Record          --" << endl
-                 << "--      [3] Find Student Record              --" << endl
-                 << "--      [4] Exit Program                     --" << endl
-                 << "--                                           --" << endl
-                 << "-----------------------------------------------" << endl << endl;
-            cout << "> Enter an option: ";
-            cin >> option;
-            cout << endl;
-
-            switch (option) {
-                case 1:
-                    input_record();
-                    save_records();
-                    break;
-                case 2:
-                    view_all_records();
-                    prompt();
-                    break;
-                case 3:
-                    find_record();
-                    prompt();
-                    break;
-                case 4:
-                    cout << "---------     [ Exiting Program ]     ---------" << endl;
-                    break;
-                default:
-                    cout << "----------     [ Invalid Option ]     ---------" << endl;
-                    break;
-            }
-        }
-    }
+	    display_intro();
+	    login();
+	    load_records();
+	    int option = 0;
+	    while (option != 5) {
+	        cout << "--------------   [ MAIN MENU ]   --------------" << endl
+	             << "--                                           --" << endl
+	             << "--      [1] Add Student Record               --" << endl
+	             << "--      [2] View All Student Record          --" << endl
+	             << "--      [3] Find Student Record              --" << endl
+	             << "--      [4] Utilities                        --" << endl
+	             << "--      [5] Exit Program                     --" << endl
+	             << "--                                           --" << endl
+	             << "-----------------------------------------------" << endl << endl;
+	        cout << "> Enter an option: ";
+	        cin >> option;
+	        cout << endl;
+	
+	        switch (option) {
+	            case 1:
+	                input_record();
+	                save_records();
+	                break;
+	            case 2:
+	                view_all_records();
+	                prompt();
+	                break;
+	            case 3:
+	                find_record();
+	                prompt();
+	                break;
+	            case 4:
+	                utilities_menu();
+	                break;
+	            case 5:
+	                cout << "---------     [ Exiting Program ]     ---------" << endl;
+	                break;
+	            default:
+	                cout << "----------     [ Invalid Option ]     ---------" << endl;
+	                break;
+	        }
+	    }
+	}
 
     ~StudentMonitoringSystem() {
         for (size_t i = 0; i < students.size(); ++i) {
