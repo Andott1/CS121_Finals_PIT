@@ -18,22 +18,23 @@ public:
     string sex; // Sex
     int age;    // Age
 
-    Student(string name = "", string id = "", string course = "", string mobile = "", string dob = "", string sex = "", int age = 0)
-        : name(name), id(id), course(course), mobile(mobile), dob(dob), sex(sex), age(age) {}
-
-    virtual string getCategory() const = 0; // Pure virtual function
-    virtual string getYearLevel() const = 0; // Pure virtual function
+    Student(string name = "", string id = "", string mobile = "", string dob = "", int age = 0, string sex = "", string course = "")
+        : name(name), id(id), mobile(mobile), dob(dob), age(age), sex(sex), course(course) {}
+	
+	virtual string getYearLevel() const = 0; // Pure virtual function
+    virtual string getProgram() const = 0; // Pure virtual function
 
     friend ostream& operator<<(ostream& os, const Student& student) {
         os << "- Full Name: " << student.name << endl;
         os << "- Student ID: " << student.id << endl;
-        os << "- Course: " << student.course << endl;
         os << "- Mobile Number: " << student.mobile << endl;
         os << "- Date of Birth: " << student.dob << endl;
-        os << "- Sex: " << student.sex << endl;
         os << "- Age: " << student.age << endl;
-        os << "- Category: " << student.getCategory() << endl;
+        os << "- Sex: " << student.sex << endl;
+        os << "- Course: " << student.course << endl;
         os << "- Year Level: " << student.getYearLevel() << endl;
+        os << "- Program: " << student.getProgram() << endl;
+        
         return os;
     }
 
@@ -43,85 +44,85 @@ public:
 // Derived classes for each year level
 class FirstYear : public Student {
 public:
-    FirstYear(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Undergraduate";
-    }
+    FirstYear(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "1st Year";
+    }
+    
+    string getProgram() const {
+        return "Undergraduate";
     }
 };
 
 class SecondYear : public Student {
 public:
-    SecondYear(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Undergraduate";
-    }
+    SecondYear(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "2nd Year";
+    }
+    
+    string getProgram() const {
+        return "Undergraduate";
     }
 };
 
 class ThirdYear : public Student {
 public:
-    ThirdYear(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Undergraduate";
-    }
+    ThirdYear(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "3rd Year";
+    }
+    
+    string getProgram() const {
+        return "Undergraduate";
     }
 };
 
 class FourthYear : public Student {
 public:
-    FourthYear(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Undergraduate";
-    }
+    FourthYear(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "4th Year";
+    }
+    
+    string getProgram() const {
+        return "Undergraduate";
     }
 };
 
 class FifthYear : public Student {
 public:
-    FifthYear(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Undergraduate";
-    }
+    FifthYear(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "5th Year";
+    }
+    
+    string getProgram() const {
+        return "Undergraduate";
     }
 };
 
 class Graduate : public Student {
 public:
-    Graduate(string name, string id, string course, string mobile, string dob, string sex, int age)
-        : Student(name, id, course, mobile, dob, sex, age) {}
-
-    string getCategory() const {
-        return "Graduate";
-    }
+    Graduate(string name, string id, string mobile, string dob, int age, string sex, string course)
+        : Student(name, id, mobile, dob, age, sex, course) {}
 
     string getYearLevel() const {
         return "N/A"; // Graduates don't have a year level
+    }
+    
+    string getProgram() const {
+        return "Graduate";
     }
 };
 
@@ -162,55 +163,57 @@ private:
     }
 
     Student* create_student_record() {
-    string name, id, course, mobile, dob, sex;
+    string name, id, mobile, dob,  sex, course;
     int age, yearLevel;
-    int studentType;
+    int studentProgram;
 
     cout << "-----------------------------------------------" << endl << endl;
-    cout << "- Choose Student Type:" << endl;
+    cout << "- Choose Student Program:" << endl;
     cout << "  [1] Undergraduate" << endl;
-    cout << "  [2] Graduate" << endl;
-    cout << endl << "> Enter Option: ";
-    cin >> studentType;
+    cout << "  [2] Graduate" << endl << endl;
+    cout << "> Enter Option: ";
+    cin >> studentProgram;
+    cout << endl;
 
-    cout << "> Enter Student Name: ";
+    cout << "> Enter Full Name: ";
     cin.ignore();
     getline(cin, name);
 
     cout << "> Enter Student ID: ";
     getline(cin, id);
 
+    cout << "> Enter Mobile Number: ";
+    getline(cin, mobile);
+
+    cout << "> Enter Date of Birth [YYYY-MM-DD]: ";
+    getline(cin, dob);
+    
+    cout << "> Enter Age: ";
+    cin >> age;
+    cin.ignore();
+
+    cout << "> Enter Sex [M/F]: ";
+    getline(cin, sex);
+
     cout << "> Enter Student Course: ";
     getline(cin, course);
 
-    cout << "> Enter Student Mobile Number: ";
-    getline(cin, mobile);
-
-    cout << "> Enter Date of Birth (YYYY-MM-DD): ";
-    getline(cin, dob);
-
-    cout << "> Enter Sex (M/F): ";
-    getline(cin, sex);
-
-    cout << "> Enter Age: ";
-    cin >> age;
-
-    switch (studentType) {
+    switch (studentProgram) {
         case 1: {
-            cout << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
+            cout << endl << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th" << endl;
             cout << "> Enter Year Level: ";
             cin >> yearLevel;
             switch (yearLevel) {
-                case 1: return new FirstYear(name, id, course, mobile, dob, sex, age);
-                case 2: return new SecondYear(name, id, course, mobile, dob, sex, age);
-                case 3: return new ThirdYear(name, id, course, mobile, dob, sex, age);
-                case 4: return new FourthYear(name, id, course, mobile, dob, sex, age);
-                case 5: return new FifthYear(name, id, course, mobile, dob, sex, age);
-                default: throw invalid_argument("Invalid year level");
+                case 1: return new FirstYear(name, id, mobile, dob, age, sex, course);
+                case 2: return new SecondYear(name, id, mobile, dob, age, sex, course);
+                case 3: return new ThirdYear(name, id, mobile, dob, age, sex, course);
+                case 4: return new FourthYear(name, id, mobile, dob, age, sex, course);
+                case 5: return new FifthYear(name, id, mobile, dob, age, sex, course);
+                default: throw invalid_argument("---         [ Invalid Year Level ]          ---");
             }
         }
-        case 2: return new Graduate(name, id, course, mobile, dob, sex, age);
-        default: throw invalid_argument("Invalid student type");
+        case 2: return new Graduate(name, id, mobile, dob, age, sex, course);
+        default: throw invalid_argument("---        [ Invalid student type ]         ---");
     }
 }
 
@@ -218,7 +221,7 @@ private:
         try {
             Student* student = create_student_record();
             students.push_back(student);
-            cout << endl << "-------     [ Student Record Added ]     ------" << endl << endl;
+            cout << endl << "---         [ Student Record Added ]        ---" << endl << endl;
             save_records(); // Save records after adding
         } catch (const invalid_argument& e) {
             cerr << e.what() << endl;
@@ -226,10 +229,10 @@ private:
     }
 
 	void view_all_records() const {
-    cout << "--------------------------------------------------" << endl;
-    cout << "[1] Undergraduate Student Records" << endl;
-    cout << "[2] Graduate Student Records" << endl;
-    cout << "--------------------------------------------------" << endl;
+	cout << "-----------------------------------------------" << endl << endl;
+    cout << "- Choose Program Type of Record: " << endl;
+    cout << "  [1] Undergraduate Student Records" << endl;
+    cout << "  [2] Graduate Student Records" << endl << endl;
     cout << "> Enter an option: ";
     int option;
     cin >> option;
@@ -243,26 +246,22 @@ private:
             view_records("Graduate");
             break;
         default:
-            cout << "Invalid option!" << endl;
+            cout << "---            [ Invalid Option ]           ---" << endl;
             break;
     }
 }
 
-	void view_records(const string& category) const {
-		if(category == "Undergraduate") {
-			cout << "--------------------------------------------------" << endl;
-	    	cout << "--------  Undergraduate Student Records  ---------" << endl;
-	    	cout << "--------------------------------------------------" << endl;
+	void view_records(const string& program) const {
+		if(program == "Undergraduate") {
+	    	cout << "----   [ UNDERGRADUATE STUDENT RECORDS ]   ----" << endl << endl;
 		}
 		else {
-			cout << "--------------------------------------------------" << endl;
-	    	cout << "-----------  Graduate Student Records  -----------" << endl;
-	    	cout << "--------------------------------------------------" << endl;
+	    	cout << "------   [ GRADUATE STUDENT RECORDS ]   -------" << endl << endl;
 		}
 	
 	    bool found = false;
 	    for (size_t i = 0; i < students.size(); ++i) {
-	        if (students[i]->getCategory() == category) {
+	        if (students[i]->getProgram() == program) {
 	            cout << "- RECORD NUMBER [" << i + 1 << "]" << endl << endl;
 	            cout << *students[i] << endl;
 	            found = true;
@@ -270,10 +269,9 @@ private:
 	    }
 	
 	    if (!found) {
-	        cout << "No " << category << " records found." << endl;
+	        cout << "--- [ No " << program << " Records Found ] ---" << endl;
 	    }
-	
-	    cout << "--------------------------------------------------" << endl;
+	    cout << "-----------------------------------------------" << endl << endl;
 	}
 
     int find_record_recursive(const string& key, int index) {
@@ -311,7 +309,7 @@ private:
         }
 
         if (!found_indices.empty()) {
-            cout << endl << "--------    [ Student Record(s) Found ]    -------" << endl << endl;
+            cout << endl << "---       [ Student Record(s) Found ]       ---" << endl << endl;
             for (size_t i = 0; i < found_indices.size(); ++i) {
                 int idx = found_indices[i];
                 cout << "- RECORD NUMBER [" << idx + 1 << "]" << endl << endl; // Display record number starting from 1
@@ -319,6 +317,7 @@ private:
             }
 
             int chosen_record_number;
+            cout << "-----------------------------------------------" << endl << endl;
             cout << "> Enter Record Number to Access: ";
             cin >> chosen_record_number;
 
@@ -330,11 +329,14 @@ private:
                 // Prompt user to choose action for the chosen record
                 int choice;
                 while (true) {
-                	cout << endl << "-----------------------------------------------" << endl
-                 				 << "---  Update Record [1] | Delete Record  [2]  --" << endl
-                 				 << "--------------  Done/Proceed [3]  -------------" << endl << endl
-                    			 << "> Choose Action for Selected Record: ";
+                	cout << endl << "-----------------------------------------------" << endl << endl;
+                	cout << "- Choose Action for Selected Record: " << endl
+		    			 << "  [1] Update Record" << endl
+		    			 << "  [2] Delete Record" << endl
+		    			 << "  [3] Done/Proceed" << endl << endl;
+				    cout << "> Enter Option: ";
                     cin >> choice;
+                    cout << endl;
 
                     switch (choice) {
                         case 1:
@@ -348,23 +350,23 @@ private:
                         case 3:
                             break;
                         default:
-                            cout << "Invalid choice! Please try again." << endl;
+                            cout << "---            [ Invalid Option ]           ---" << endl;
                             continue;
                     }
                     break; // Exit while loop after a valid choice
                 }
             } else {
-                cout << "---------  [ Invalid Record Number ]  ---------"<< endl << endl;
+                cout << endl << "---        [ Invalid Record Number ]        ---"<< endl << endl;
             }
         } else {
-            cout << endl << "-----     [ Student Record Not Found ]     ----" << endl << endl;
+            cout << endl << "---       [ Student Record Not Found ]      ---" << endl << endl;
         }
     }
 
     void delete_record(int index) {
         delete students[index];
         students.erase(students.begin() + index);
-        cout << endl << "------     [ Student Record Deleted ]     -----" << endl << endl;
+        cout << endl << "---        [ Student Record Deleted ]       ---" << endl << endl;
         save_records(); // Save records after deletion
     }
 
@@ -373,14 +375,21 @@ private:
     int record_part;
 
     while (true) {
-        cout << endl << "-----------------------------------------------" << endl
-             		 << "------  Name [1] | ID [2] | Course [3]  -------" << endl
-             		 << "--  Number [4] | Year Level [5] | DOB [6]  ---" << endl
-             		 << "--   Sex [7] | Age [8] | Done [9]  ---" << endl << endl
-             		 << "> Choose Which Part to Update: ";
+    	cout << "-----------------------------------------------" << endl << endl;
+    	cout << "- Choose Part to Update: " << endl
+		     << "  [1] Name" << endl
+		     << "  [2] Student ID" << endl
+		     << "  [3] Mobile Number" << endl
+		     << "  [4] Date of Birth" << endl
+		     << "  [5] Age" << endl
+		     << "  [6] Sex" << endl
+		     << "  [7] Course" << endl
+		     << "  [8] Year Level" << endl
+		     << "  [0] Done" << endl << endl;
+		cout << "> Enter Option: ";
         cin >> record_part;
 
-        if (record_part == 9) {
+        if (record_part == 0) {
             cout << endl;
             return;
         }
@@ -388,78 +397,79 @@ private:
         cout << endl;
         switch (record_part) {
             case 1:
-                cout << "> Enter New Student Name: ";
+                cout << "> Enter Updated Full Name: ";
                 cin.ignore();
                 getline(cin, student->name);
-                cout << endl << "-------     [ Student Name Updated ]     ------" << endl;
+                cout << endl << "---         [ Student Name Updated ]        ---" << endl << endl;
                 break;
             case 2:
-                cout << "> Enter New Student ID: ";
+                cout << "> Enter Updated Student ID: ";
                 cin.ignore();
                 getline(cin, student->id);
-                cout << endl << "--------     [ Student ID Updated ]     -------" << endl;
+                cout << endl << "---          [ Student ID Updated ]         ---" << endl << endl;
                 break;
             case 3:
-                cout << "> Enter New Student Course: ";
-                cin.ignore();
-                getline(cin, student->course);
-                cout << endl << "------     [ Student Course Updated ]     -----" << endl;
-                break;
-            case 4:
-                cout << "> Enter New Student Mobile Number: ";
+            	cout << "> Enter Updated Mobile Number: ";
                 cin.ignore();
                 getline(cin, student->mobile);
-                cout << endl << "--     [ Student Mobile Number Updated ]     --" << endl;
+                cout << endl << "---    [ Student Mobile Number Updated ]    ---" << endl << endl;
                 break;
-            case 5: {
-                int yearLevel;
-                cout << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
-                cout << "> Enter New Year Level: ";
-                cin >> yearLevel;
-                Student* updatedStudent = NULL;
-                switch (yearLevel) {
-                    case 1: updatedStudent = new FirstYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
-                    case 2: updatedStudent = new SecondYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
-                    case 3: updatedStudent = new ThirdYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
-                    case 4: updatedStudent = new FourthYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
-                    case 5: updatedStudent = new FifthYear(student->name, student->id, student->course, student->mobile, student->dob, student->sex, student->age); break;
-                    default: 
-                        cout << "-------    [ Invalid Year Level ]     --------" << endl;
-                        continue;
-                }
-                delete students[index];
-                students[index] = updatedStudent;
-                cout << endl << "------     [ Year Level Updated ]     ------" << endl;
-                break;
-            }
-            case 6:
-                cout << "> Enter New Date of Birth (YYYY-MM-DD): ";
+            case 4:
+            	cout << "> Enter Updated Date of Birth (YYYY-MM-DD): ";
                 cin.ignore();
                 getline(cin, student->dob);
-                cout << endl << "--     [ Date of Birth Updated ]     --" << endl;
+                cout << endl << "---        [ Date of Birth Updated ]        ---" << endl << endl;
                 break;
-            case 7:
-                cout << "> Enter New Sex (M/F): ";
+            case 5:
+                cout << "> Enter Updated Age: ";
+                cin >> student->age;
+                cout << endl << "---             [ Age Updated ]             ---" << endl << endl;
+                break;
+            case 6:
+                cout << "> Enter Updated Sex (M/F): ";
                 cin.ignore();
                 getline(cin, student->sex);
-                cout << endl << "--     [ Sex Updated ]     --" << endl;
+                cout << endl << "---             [ Sex Updated ]             ---" << endl << endl;
                 break;
-            case 8:
-                cout << "> Enter New Age: ";
-                cin >> student->age;
-                cout << endl << "--     [ Age Updated ]     --" << endl;
+            case 7:
+                cout << "> Enter Updated Student Course: ";
+                cin.ignore();
+                getline(cin, student->course);
+                cout << endl << "---        [ Student Course Updated ]       ---" << endl << endl;
                 break;
+            case 8: {
+            	int yearLevel;
+                cout << endl << "- [1] 1st, [2] 2nd, [3] 3rd, [4] 4th, [5] 5th: ";
+                cout << "> Enter Updated Year Level: ";
+                cin >> yearLevel;
+                Student* updatedStudent = NULL;
+                
+                switch (yearLevel) {
+                    case 1: updatedStudent = new FirstYear(student->name, student->id, student->mobile, student->dob, student->age, student->sex, student->course); break;
+                    case 2: updatedStudent = new SecondYear(student->name, student->id, student->mobile, student->dob, student->age, student->sex, student->course); break;
+                    case 3: updatedStudent = new ThirdYear(student->name, student->id, student->mobile, student->dob, student->age, student->sex, student->course); break;
+                    case 4: updatedStudent = new FourthYear(student->name, student->id, student->mobile, student->dob, student->age, student->sex, student->course); break;
+                    case 5: updatedStudent = new FifthYear(student->name, student->id, student->mobile, student->dob, student->age, student->sex, student->course); break;
+                    default: 
+                        cout << "---          [ Invalid Year Level ]         ---" << endl << endl;
+                        continue;
+                }
+                
+                delete students[index];
+                students[index] = updatedStudent;
+                cout << endl << "---          [ Year Level Updated ]         ---" << endl << endl;
+                break;
+			}
             default:
-                cout << "-------    [ Invalid Part Number ]     --------" << endl;
+                cout << "---         [ Invalid Part Number ]         ---" << endl << endl;
                 break;
         }
         save_records();
     }
 }
 
-
     void prompt() const {
-        cout << "-----     [ Press Enter to Continue ]     -----" << endl;
+        cout << "---       [ Press Enter to Continue ]       ---" << endl;
         cin.ignore();
         while (true) {
             if (cin.get() == '\n') {
@@ -473,7 +483,7 @@ private:
     ifstream gradFile(gradFilename.c_str());
 
     if (!undergradFile || !gradFile) {
-        cerr << "Error: Unable to open file(s) for reading." << endl;
+        cerr << "-[ Error: Unable to open file(s) for reading ]-" << endl << endl;
         return;
     }
 
@@ -482,30 +492,30 @@ private:
     // Load undergraduate records
 	while (getline(undergradFile, line)) {
 	    istringstream iss(line);
-	    string name, id, course, mobile, dob, sex, yearLevelStr, ageStr;
+	    string name, id, mobile, dob, ageStr, sex, course, yearLevelStr;
 	
 	    // Split the line into fields using comma as the delimiter
 	    getline(iss, name, ',');
 	    getline(iss, id, ',');
-	    getline(iss, course, ',');
 	    getline(iss, mobile, ',');
-	    getline(iss, yearLevelStr, ',');
 	    getline(iss, dob, ',');
-	    getline(iss, sex, ',');
 	    getline(iss, ageStr, ',');
-	
+	    getline(iss, sex, ',');
+	    getline(iss, course, ',');
+	    getline(iss, yearLevelStr, ',');
+
 	    // Convert year level and age string to integers
 	    int yearLevel, age;
-	    stringstream(yearLevelStr) >> yearLevel;
 	    stringstream(ageStr) >> age;
+	    stringstream(yearLevelStr) >> yearLevel;
 	
 	    // Add the student to the vector based on the year level
 	    switch (yearLevel) {
-	        case 1: students.push_back(new FirstYear(name, id, course, mobile, dob, sex, age)); break;
-	        case 2: students.push_back(new SecondYear(name, id, course, mobile, dob, sex, age)); break;
-	        case 3: students.push_back(new ThirdYear(name, id, course, mobile, dob, sex, age)); break;
-	        case 4: students.push_back(new FourthYear(name, id, course, mobile, dob, sex, age)); break;
-	        case 5: students.push_back(new FifthYear(name, id, course, mobile, dob, sex, age)); break;
+	        case 1: students.push_back(new FirstYear(name, id, mobile, dob, age, sex, course)); break;
+	        case 2: students.push_back(new SecondYear(name, id, mobile, dob, age, sex, course)); break;
+	        case 3: students.push_back(new ThirdYear(name, id, mobile, dob, age, sex, course)); break;
+	        case 4: students.push_back(new FourthYear(name, id, mobile, dob, age, sex, course)); break;
+	        case 5: students.push_back(new FifthYear(name, id, mobile, dob, age, sex, course)); break;
 	        default:
 	            cerr << "Error: Invalid year level for undergraduate student: " << line << endl;
 	            break;
@@ -515,25 +525,24 @@ private:
     // Load graduate records
     while (getline(gradFile, line)) {
         istringstream iss(line);
-        string name, id, course, mobile, dob, sex, ageStr;
+        string name, id, mobile, dob, ageStr, sex, course;
 
         // Split the line into fields using comma as the delimiter
         getline(iss, name, ',');
-        getline(iss, id, ',');
-        getline(iss, course, ',');
-        getline(iss, mobile, ',');
-        getline(iss, dob, ',');
-        getline(iss, sex, ',');
-        getline(iss, ageStr, ',');
+	    getline(iss, id, ',');
+	    getline(iss, mobile, ',');
+	    getline(iss, dob, ',');
+	    getline(iss, ageStr, ',');
+	    getline(iss, sex, ',');
+	    getline(iss, course, ',');
 
         // Convert age string to integer
         int age;
         stringstream(ageStr) >> age;
 
         // Add the graduate student to the vector
-        students.push_back(new Graduate(name, id, course, mobile, dob, sex, age));
+        students.push_back(new Graduate(name, id, mobile, dob, age, sex, course));
     }
-
     undergradFile.close();
     gradFile.close();
 }
@@ -543,7 +552,7 @@ private:
     ofstream gradFile(gradFilename.c_str());
 
     if (!undergradFile || !gradFile) {
-        cerr << "Could not open file for writing!" << endl;
+        cerr << "---   [ Could not open file for writing ]   ---" << endl;
         return;
     }
 
@@ -552,25 +561,25 @@ private:
         const Student* student = students[i];
         // Check if the student is an undergraduate
         if (const FirstYear* fy = dynamic_cast<const FirstYear*>(student)) {
-            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            undergradFile << "," << fy->getYearLevel(); // Append year level
-            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+            undergradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            undergradFile << "," << student->age << "," << student->sex << "," << student->course;
+			undergradFile << "," << fy->getYearLevel() << endl; // Append year level
         } else if (const SecondYear* sy = dynamic_cast<const SecondYear*>(student)) {
-            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            undergradFile << "," << sy->getYearLevel(); // Append year level
-            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+        	undergradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            undergradFile << "," << student->age << "," << student->sex << "," << student->course;
+			undergradFile << "," << sy->getYearLevel() << endl; // Append year level
         } else if (const ThirdYear* ty = dynamic_cast<const ThirdYear*>(student)) {
-            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            undergradFile << "," << ty->getYearLevel(); // Append year level
-            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+        	undergradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            undergradFile << "," << student->age << "," << student->sex << "," << student->course;
+			undergradFile << "," << ty->getYearLevel() << endl; // Append year level
         } else if (const FourthYear* fy = dynamic_cast<const FourthYear*>(student)) {
-            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            undergradFile << "," << fy->getYearLevel(); // Append year level
-            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+        	undergradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            undergradFile << "," << student->age << "," << student->sex << "," << student->course;
+			undergradFile << "," << fy->getYearLevel() << endl; // Append year level
         } else if (const FifthYear* fy = dynamic_cast<const FifthYear*>(student)) {
-            undergradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            undergradFile << "," << fy->getYearLevel(); // Append year level
-            undergradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+        	undergradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            undergradFile << "," << student->age << "," << student->sex << "," << student->course;
+			undergradFile << "," << fy->getYearLevel() << endl; // Append year level
         }
     }
 
@@ -579,25 +588,23 @@ private:
         const Student* student = students[i];
         // Check if the student is a graduate
         if (dynamic_cast<const Graduate*>(student)) {
-            gradFile << student->name << "," << student->id << "," << student->course << "," << student->mobile;
-            gradFile << "," << student->dob << "," << student->sex << "," << student->age << endl;
+            gradFile << student->name << "," << student->id << "," << student->mobile << "," << student->dob;
+            gradFile << "," << student->age << "," << student->sex << "," << student->course << endl;
         }
     }
-
     undergradFile.close();
     gradFile.close();
 }
 
-
 	void utilities_menu() {
 	    int option;
-	    cout << "----------------   [ UTILITIES MENU ]   ----------------" << endl
-	         << "--                                                    --" << endl
-	         << "--   [1] Check for Duplicate Records                  --" << endl
-	         << "--   [2] Return to Main Menu                           --" << endl
-	         << "--              	                                      --" << endl
-	         << "--------------------------------------------------------" << endl << endl;
-	    cout << "> Enter an option: ";
+	    cout << "-----------   [ UTILITIES MENU ]   ------------" << endl
+	         << "--                                           --" << endl
+	         << "--      [1] Check for Duplicate Records      --" << endl
+	         << "--      [2] Return to Main Menu              --" << endl
+             << "--                                           --" << endl
+             << "-----------------------------------------------" << endl << endl;
+		cout << "> Enter an option: ";
 	    cin >> option;
 	    cout << endl;
 	
@@ -608,13 +615,13 @@ private:
 	        case 2:
 	            break;
 	        default:
-	            cout << "----------     [ Invalid Option ]     ---------" << endl;
+	            cout << "---            [ Invalid Option ]           ---" << endl << endl;
 	            break;
 	    }
 	}
 
 	void check_duplicate_records() {
-	    cout << "Checking for Duplicate Records..." << endl;
+	    cout << "---  [ Checking for Duplicate Records... ]  ---" << endl;
 	    bool foundDuplicates = false;
 	
 	    // Create a vector to store the indices of duplicate records
@@ -635,27 +642,29 @@ private:
 	
 	    // If duplicates are found, prompt the user to choose one and select an action
 	    if (foundDuplicates) {
-	        cout << "Duplicate records found!" << endl;
+	        cout << endl << "---       [ Duplicate records found ]       ---" << endl << endl;
 	        for (size_t i = 0; i < duplicateIndices.size(); ++i) {
 	            int idx = duplicateIndices[i];
-	            cout << "Duplicate Record " << i + 1 << ":" << endl;
+	            cout << "- DUPLICATE RECORD [" << i + 1 << "]" << endl << endl;
 	            cout << *students[idx] << endl;
 	        }
 	
 	        int chosenIndex;
-	        cout << "Enter the index of the record you want to choose: ";
+	        cout << "> Enter Record Number to Access: ";
 	        cin >> chosenIndex;
+	        cout << endl;
 	
 	        // Validate the chosen index
 	        if (chosenIndex >= 1 && chosenIndex <= duplicateIndices.size()) {
 	            int chosenRecordIndex = duplicateIndices[chosenIndex - 1];
 	
 	            int choice;
-	            cout << "Choose an action: " << endl;
-	            cout << "1. Update Record" << endl;
-	            cout << "2. Delete Record" << endl;
-	            cout << "3. Done/Proceed" << endl;
-	            cout << "Enter your choice: ";
+	            cout << "-----------------------------------------------" << endl << endl;
+                cout << "- Choose Action for Selected Record: " << endl
+	    			 << "  [1] Update Record" << endl
+	    			 << "  [2] Delete Record" << endl
+	    			 << "  [3] Done/Proceed" << endl << endl;
+				cout << "> Enter Option: ";
 	            cin >> choice;
 	
 	            switch (choice) {
@@ -671,14 +680,14 @@ private:
 	                    // Proceed without performing any action
 	                    break;
 	                default:
-	                    cout << "Invalid choice! Please try again." << endl;
+	                    cout << endl << "---            [ Invalid Option ]           ---" << endl << endl;
 	                    break;
 	            }
 	        } else {
-	            cout << "Invalid index chosen!" << endl;
+	            cout << "---            [ Invalid Index ]            --- " << endl << endl;
 	        }
 	    } else {
-	        cout << "No duplicate records found." << endl;
+	        cout << endl << "---      [ No Duplicate Records Found ]     ---" << endl << endl;
 	    }
 	}
 
@@ -719,12 +728,13 @@ public:
 	                break;
 	            case 4:
 	                utilities_menu();
+	                prompt();
 	                break;
 	            case 5:
-	                cout << "---------     [ Exiting Program ]     ---------" << endl;
+	                cout << "---           [ Exiting Program ]           ---" << endl;
 	                break;
 	            default:
-	                cout << "----------     [ Invalid Option ]     ---------" << endl;
+	                cout << "---            [ Invalid Option ]           ---" << endl << endl;
 	                break;
 	        }
 	    }
