@@ -1,0 +1,5 @@
+Kurt Andre Llanes Olaer,2021304288,09610916362,2004-08-31,19,M,BS Computer Science,1st Year
+Johanie A. Abulkhair,2023306811,,,0,M,BS Computer Science,1st Year
+Myka Angelie G. Baclayo,2022303983,,,0,F,BS Computer Science,1st Year
+Johanie A. Abulkhair,2022303983,,,0,M,BS Computer Science,1st Year
+Kurt Andre Llanes Olaer,2029304288,09610916362,,0,M,BS Computer Science,1st Year
